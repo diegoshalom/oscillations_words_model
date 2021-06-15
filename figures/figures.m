@@ -1,7 +1,8 @@
+%%
+close all
 
 %% Figure 1
 
-close all
 clear all
 
 figure(1);clf
@@ -130,8 +131,8 @@ end
 %% Figure 2
 
 clear all
-close all
-figure(3);clf
+
+figure(2);clf
 
 set(gcf,'color','w')
 
@@ -468,23 +469,22 @@ set(gcf,'Children', children(end:-1:1));
 
 %% Figure 3
 clear all
-%close all
-figure(2);clf
 
+figure(3);clf
 set(gcf,'color','w')
 
 x0=30;
-    y0=200;
-    width=1100;
-    height=400;
-    set(gcf,'position',[x0,y0,width,height])
+y0=200;
+width=1100;
+height=400;
+set(gcf,'position',[x0,y0,width,height])
 
 bordeizq = 0.05;
-ancho1 = .4; %*5
+ancho1 = .4; 
 ancho2 = .2;
 ancho3 = .22;
-seph1 = .04; %
-seph2 = .06; %
+seph1 = .04; 
+seph2 = .06; 
 bordeinf = .12;
 alto1 =.82;
 alto2 =alto1 /2;
@@ -498,30 +498,23 @@ handles(4)=axes('position',[bordeizq+ancho1+seph1+ancho2+seph2 bordeinf ancho3 a
 
 
 % %%%%%%%%%%%% FIGURA 2 pendientes
-
 load Datos_Fig2_Pendientes
 
 set(gcf,'currentaxes',handles(4))
-%figure(1);clf;hold all
 lightblue = [0.4 0.4 1];
-orange=[254,216,177]./255;
 
-colores=get(gca,'colormap');%viene con 64 colores
+colores=get(gca,'colormap');
 orange=colores(55,:);
 violet=colores(1,:);
-
 
 hold on
 loglog(mediasmax,desviosmax,'.','color',orange)
 loglog(mediasmin,desviosmin,'.','color',violet)
 loglog(mediasexp,desviosexp,'.','Color','k')
-% grid on
 xlim([1e-8 1e-2])
 ylim([1e-10 1e-2])
 set(gca,'xscale','log')
 set(gca,'yscale','log')
-
-
 
 line(xlim,10.^polyval(pmax,log10(xlim)),'Color',orange)
 line(xlim,10.^polyval(pmin,log10(xlim)),'Color',violet)
@@ -529,69 +522,31 @@ line(xlim,10.^polyval(pexp,log10(xlim)),'Color','k')
 xlabel('Mean trend')
 ylabel('Mean oscillation amplitude')
 
- 
-
 % %%%%%%%%%%%%%%%%% FIGURA 2 graficar los ajustes
-%graficar los ajustes
-% clear all
-% close all
-% load ParametrosAjustes %cargo las variables Ajustes, AjustesTrend y AjustesOsc. Ajustes tiene la data total ajustada, el resto su correspondiente
-% load F_TIMELINE_con_trend.mat
-
 load AjustesIndividuales
-
 DATA=reshape([F_TIMELINE.smoothed],309,length(F_TIMELINE))';
 TREND=reshape([F_TIMELINE.trend],309,length(F_TIMELINE))';
 OSC=DATA-TREND;
 
 indicesusar=50:300;
 
-
-% for jota=[26 46]%1:length(Parametros)
-%     ind=Parametros(jota).indicepalabras;
-%     
-%     figure
-%     plot(indicesusar+1700,DATA(ind,indicesusar),'k')
-%     hold on
-%     plot(indicesusar+1700,Parametros(jota).Ajuste,'r')
-% %     plot(indicesusar+1700,F_TIMELINE(ind).trend(indicesusar),'b')
-%     plot(indicesusar+1700,F_TIMELINE(ind).freqrel(indicesusar),'.')
-%     xlabel('Years')
-%     ylabel('Relative Frequency')
-%     legend('Smoothed','Model','Raw Data')
-%     title(Parametros(jota).word)
-% end
-
-
-
-% figure(1);clf;
-% subplot(2,1,2)
 pal1=3997;
-pal2=2926;%961;
+pal2=2926;
 set(gcf,'currentaxes',handles(2))
-% ind=Parametros(46).indicepalabras;
 ind=pal1;
 plot(indicesusar+1700,DATA(ind,indicesusar),'k')
 hold on
 plot(indicesusar+1700,F_TIMELINE(ind).soluciones.SumaCODT,'r')
-%     plot(indicesusar+1700,F_TIMELINE(ind).trend(indicesusar),'b')
-%plot(indicesusar+1700,F_TIMELINE(ind).freqrel(indicesusar),'.')
 ylabel('Relative Frequency')
-%legend('Experimental','Model')
-% title(Parametros(46).word)
 text(1870,7e-5,F_TIMELINE(ind).word)
 set(gca,'xticklabel',[])
 xlim([1750 2000])
 
-% subplot(2,1,1)
 set(gcf,'currentaxes',handles(3))
-% ind=Parametros(26).indicepalabras;
 ind=pal2;
 plot(indicesusar+1700,DATA(ind,indicesusar),'k')
 hold on
 plot(indicesusar+1700,F_TIMELINE(ind).soluciones.SumaCODT,'r')
-%     plot(indicesusar+1700,F_TIMELINE(ind).trend(indicesusar),'b')
-%plot(indicesusar+1700,F_TIMELINE(ind).freqrel(indicesusar),'.')
 ylabel('Relative Frequency')
 xlabel('Years')
 text(1870,2.7e-4,F_TIMELINE(ind).word)
@@ -600,25 +555,16 @@ xlim([1750 2000])
 h=legend({'Experimental','Model'},'Position',[0.6 0.2 0.01 0.02]);
 h.EdgeColor='none';
 set(h,'color','none')
+
 % %%%%%%%%%%%%%%%%%%%%% FIGURA 2 curvas de nivel
-
 load datos_para_fig2
-% load ParametrosAjustes
-
-% alphasajustados=[Parametros.alphas];
-% rsajustados=[Parametros.rs];
-
 rrange=[min(rs(:)) max(rs(:))];
 taurange=[min(2./alphas(:)),max(2./alphas(:))];
-
-% figure(4);clf;hold all
 set(gcf,'currentaxes',handles(1));
 hold all
 pendientes=reshape([R.pendiente],[size(alphas,1) size(alphas,2)]);
 [C,h] =contourf(rs,2./alphas,pendientes,8);
 set(h,'LineColor','none')
-% contour(rs,2./alphas,pendientes,[0.762 0.782],'y','LineWidth',2)
-%contour(rs,2./alphas,pendientes,[0.75 0.85],'y','LineWidth',2)
 colorbar
 
 ylabel('\tau (years)')
@@ -634,16 +580,14 @@ posmaximos=[F_TIMELINE.posmaximos];
 Razon=[F_TIMELINE.Razon];
 indice=[Razon.corrosc]>1/cota & [Razon.corrosc]<cota & ...
        [Razon.disttotal]>1/cota & [Razon.disttotal]<cota;
+   sum(indice)
 x=rsajustes([posmaximos.SumaCODT]);
 y=tausajustes([posmaximos.SumaCODT]);
 scatter(x(indice),y(indice), 5,'o', 'MarkerFaceColor', 'r','markeredgecolor','r')
 scatter(x(pal1),y(pal1), 40, 'k')
 scatter(x(pal2),y(pal2), 40, 'k')
-% h_lines=fun_strong.rayitacolorbar([0.8 0.9])
 
 imagedir='./imagenes/';
-
-% [left bottom width height] en fracción de la figura
 %AMORTIGUADO
 axes('position',[.13 .25 .09 .19]);
 I=importdata([imagedir 'Imagen1.png']);
@@ -667,7 +611,7 @@ set(h, 'AlphaData', I.alpha);
 
 colormap('default')
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% para las letritas creo un nuevo eje vacio, transparente
+% letters
 AxesH = axes('Parent', gcf, ...
   'Units', 'normalized', ...
   'Position', [0, 0, 1, 1], ...
@@ -683,18 +627,16 @@ for indp=1:4
     text(posx,posy,letras(indp),'fontsize',20)
 end
 
-% print_pdf('fig2',gcf)
-
 %% Figure 4
-close all
 clear all
+
 figure(4);clf
 set(gcf,'position',[174         292        1402         600])
 set(gcf,'color','w')
 
 bordeizq = 0.05;
-ancho1 = .15; %*5
-seph = .04; %
+ancho1 = .15; 
+seph = .04; 
 ancho2 = 2* ancho1;
 ancho3 =.22;
 bordeinf1 = .08;
@@ -712,11 +654,8 @@ handles(5)=axes('position',[bordeizq+ancho3+seph bordeinf1 ancho1 alto1]);
 handles(6)=axes('position',[bordeizq+ancho3+seph+ancho1+seph bordeinf1 ancho1 alto1]);
 handles(7)=axes('position',[bordeizq+ancho3+seph+2*ancho1+2*seph bordeinf1 ancho2 alto1]);
 
-% FIGURA 4 paneles 1 2 y 7
-% clear all; %close all
 load data_para_figura_4
 
-%armo matrices:
 x=0:0.005:.3;
 mmean=zeros(length(MS),length(x));
 mmax=zeros(length(MS),length(x));
@@ -747,79 +686,25 @@ mediacontrend=[C.mean_par];
 maxicontrend=[C.max_par];
 
 load stat_simulaciones_dur2
-%elijo la amplitud 0.1(indice 11) y dura 6
 mediatrendreset=[CS{21}.mean_par];
 maxitrendreset=[CS{21}.max_par];
 
 load stat_shuffle_contrend
-%elijo la amplitud 0.1(indice 11) y dura 8
 mediashuffle=[C.mean_par];
 maxishuffle=[C.max_par];
-
-
 
 grupos1=[0*ones(size(mediasreal)) 1*ones(size(mediasreal)) 2*ones(size(mediasreal)) 3*ones(size(mediasreal)) 4*ones(size(mediasreal))];
 datos1=[mediasreal' mediashuffle' mediasintrend' mediacontrend' mediatrendreset'];
 datos2=[maxireal' maxishuffle' maxisintrend' maxicontrend' maxitrendreset'];
 
-% figure(6);clf
-%     x0=30;
-%     y0=100;
-%     width=450;
-%     height=600;
-%     set(gcf,'position',[x0,y0,width,height])
-
-% if 0
-%     subplot(2,1,2)
-% 
-%     datos=[datos1(:) ; datos2(:)];
-%     grupos1=[grupos1' ; grupos1'];
-%     grupos2 = [zeros(numel(datos1),1) ; ones(numel(datos2),1)];
-%     grupos={ grupos1 grupos2 };
-%     h3=boxplot(datos,grupos,'ColorGroup',grupos2, ...
-%             'LabelVerbosity','minor', ...
-%         'FactorGap',[30  1], ... %para que separe los grupos
-%         'colors','kr',...
-%         'whisker', inf, ... %para que no muestre los outliers
-%         'BoxStyle','filled'  );
-% 
-%     % %pongo los xlabels en las posiciones correctas (tiene que poder hacerse mas facil...)
-%     % %pongo los xlabels en las posiciones correctas (tiene que poder hacerse mas facil...)
-%     xpos=linspace(mean([min(get(h3(1,1),'xdata')) min(get(h3(1,2),'xdata'))]), ...
-%                   mean([min(get(h3(1,end-1),'xdata')) min(get(h3(1,end),'xdata'))]),5);
-%     row1 = {'Exp' '   Exp' '    Sim' '  Sim' '       Sim' };
-%     row2 = {'' 'Shuffled' 'no trends' 'trends' 'trend & reset' };
-%     labelArray = [row1; row2]; 
-%     tickLabels = (sprintf('%s\\newline%s\n', labelArray{:}));
-%     set(gca,'xtick',xpos,'xticklabel',tickLabels )
-%     set(gca, 'YScale', 'log')
-%     grid on
-% 
-% 
-%     %ensancho un poco lo xlims
-%     xlim([min(xlim)-range(xlim)/10 max(xlim)+range(xlim)/10]);
-% 
-%     %rectangulo transparente
-%     xpos=min(xlim)+[0 range(xlim)/4+4] ;
-%     ypos=ylim;
-%     x = xpos([1 2 2 1 1]);
-%     y = ypos([1 1 2 2 1]);
-%     p=patch(x,y,'k');
-%     set(p,'FaceAlpha',0.1,'linestyle','none');
-%     ylabel('Phase coherence \rho')
-% end 
-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel A
-% subplot(2,1,2)
 set(gcf,'currentaxes',handles(1))
-
 hold all
 
 medias=[mean(mediasreal) nanmean(mediashuffle) mean(mediasintrend) mean(mediacontrend) mean(mediatrendreset)];
 err=[sem(mediasreal) nansem(mediashuffle') sem(mediasintrend) sem(mediacontrend) sem(mediatrendreset)];
 sd=[std(mediasreal) nanstd(mediashuffle) std(mediasintrend) std(mediacontrend) std(mediatrendreset)];
 errorbar((1:5),medias,err,'b','linestyle','none','linewidth',3,'capsize',0)
-% errorbar((1:5)-0.05,medias,sd,'linestyle','none','linewidth',1,'capsize',0)
 
 medias=[mean(maxireal) nanmean(maxishuffle) mean(maxisintrend) mean(maxicontrend) mean(maxitrendreset)];
 err=[sem(maxireal) nansem(maxishuffle') sem(maxisintrend) sem(maxicontrend) sem(maxitrendreset)];
@@ -830,7 +715,6 @@ ylim([.2 .95])
 
 hhh=plot([1 1 5 5],[.79 .85 .85 .79],'color',[.5 .5 .5]);
 nomuestraenlegend(hhh)
-%rectangulo transparente
 xpos=[min(xlim) 2.5] ;
 ypos=ylim;
 x = xpos([1 2 2 1 1]);
@@ -838,8 +722,6 @@ y = ypos([1 1 2 2 1]);
 p=patch(x,y,'k');
 set(p,'FaceAlpha',0.1,'linestyle','none');
 
-% xpos=linspace(mean([min(get(h3(1,1),'xdata')) min(get(h3(1,2),'xdata'))]), ...
-%               mean([min(get(h3(1,end-1),'xdata')) min(get(h3(1,end),'xdata'))]),5);
 xpos = [1:5];
 row1 = {'Exp' '   Exp' '    Sim' '  Sim' '       Sim' };
 row2 = {'' 'Shuffled' 'no trend' 'trend' 'trend reset' };
@@ -849,32 +731,21 @@ set(gca,'xtick',xpos,'xticklabel',tickLabels )
 set(gca, 'YGrid', 'on', 'XGrid', 'off','ytick',[.2 .4 .6 .8 ])
 box on
 
-
-
-load TrendPendienteFase
-
-% pendiente=pendiente*length(40:290);
-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel E
-%figure(1);clf;
+load TrendPendienteFase
 set(gcf,'currentaxes',handles(5))
-% subplot(2,2,1)
 
 hhh=histogram(pendiente,16);
 line([0 0],ylim,'linestyle','--','color',[.5 .5 .5])
-
 hhh.EdgeColor='none';
-% title('Trend slope at synchro peak');
 xlabel('Trend slope at peak [1/year]')
 ylabel('Counts')
 ylim([0 max(hhh.Values)+10])
 xlim([-.02 .02])
 set(handles(5),'color',[.9 .9 .9])
 
-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Panel F
 set(gcf,'currentaxes',handles(6))
-% subplot(2,2,2)
 
 xs=linspace(-pi,pi,10);
 h=histogram(phaselock,xs);
@@ -885,18 +756,12 @@ xticks([-pi -pi/2 0 pi/2 pi])
 xticklabels({'-\pi','-\pi/2','0','\pi/2','\pi'})
 xlim([-pi pi])
 ylim([0 max(h.Values)+1])
-% title('\psi at synchro peak');
 xlabel('\psi at peak')
 ylabel('Counts')
 set(handles(6),'color',[.9 .9 .9])
 
-
-% FIGURA 4 paneles 3, 4, 5 ,6
-
-%en el plano (r,alpha)
-N=180;        % población
-tmax=150;    % tiempo de integración
-
+N=180;        
+tmax=150;    
 
 K=600;
 rmean=0.6;
@@ -905,16 +770,14 @@ alphamean=0.3;
 alphadev=0.05;
 time_perturbation=112;
 
-% distribución en el espacio de fases
 rs = rdev.*randn(N,1) +  rmean;
 alphas = alphadev.*randn(N,1) + rs/2;
 
 points=[rs(:) alphas(:)];
 [theta,rho] = cart2pol(rs(:),alphas(:)); 
 good=find(tan(abs(theta))<0.58 & tan(abs(theta))>0.49);
-points=points(good,:);  %después de Hopf y antes de homoclínica
+points=points(good,:);  
 sizecomm=length(good);
-
 
 t0=0:0.05:tmax; 
 opts = odeset('RelTol',1e-10,'AbsTol',1e-10);
@@ -923,21 +786,14 @@ zz=zeros(length(t0));
 comp=zeros(sizecomm,length(t0));
 phaseexp=nan(size(comp));
 
-
-% figure(2); clf;
-
-
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel B
-%las simulaciones en el espacio de parámetros
 set(gcf,'currentaxes',handles(2))
-% subplot(3,2,1)
 hold on;
 for indpunto=1:size(points,1)
     plot(points(indpunto,1),2./points(indpunto,2),'o','MarkerSize',4,'markerfacecolor','k'); 
 end
-% plot(points(:,1),2./points(:,2),'ok','markerfacecolor','k','MarkerSize',3); 
 x= linspace(0,1,100); 
-y= 4./x;               % Hopf
+y= 4./x; 
 plot(x,y,'lineWidth',1,'Color','k');hold on;
 xlim([0.4 .8]);
 ylim([4 10]);
@@ -946,9 +802,8 @@ ylabel('\tau (years)');
 box on
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel C
-%las patadas que dan buenas distribuciones
 set(gcf,'currentaxes',handles(3));cla
-% subplot(3,2,2);
+
 hold all
 x=0:0.005:.3;
 mmean=zeros(length(MS),length(x));
@@ -965,40 +820,35 @@ mM(mM>0.05)=1; mM(mM<0.05)=0;
 mm(mm>0.05)=1; mm(mm<0.05)=0;
 
 imagesc(x,1:length(y),mm+mM)
-set(gca, 'Layer', 'top')%para que la imagen no tape el axis https://la.mathworks.com/matlabcentral/answers/405351-how-to-stop-patches-from-covering-axes-and-ticks
+set(gca, 'Layer', 'top')
 caxis([1 2])
 xlim([0.05 0.25])
 ylim([.5 7.5])
 xlabel('Relative kick amplitude')  
 ylabel('kick duration (years)')
 axis xy
-%set(gca,'ytick',1:length(y),'yticklabel',y)
 plot(.15,2,'w*')
-% colormap(1-gray)
+
 colorList = get(gca,'ColorOrder');
 histColor = colorList(1,:);
-color=[0 .447 .741]*.6+[1 1 1]*.4;%tomo el primer color de colororder, y en el hist tiene alpha 0.6, por eso promedio con 111
+color=[0 .447 .741]*.6+[1 1 1]*.4;
 colormap([[1 1 1];color])
     
 box on
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel D
 set(gcf,'currentaxes',handles(4))
-%     subplot(3,1,2)
 hold on;
 for ind=1:sizecomm
-    %condiciones iniciales random
-    ci=K+400*([rand();rand();rand()]-.5); %esto da una amplitud razonable para K=500
-
+    ci=K+400*([rand();rand();rand()]-.5); 
     r=points(ind,1);
     alpha=points(ind,2);
 
-%       patada corta en K hacia abajo ANDA  
       sk=@(t,y,K,alpha,r) [r*y(1)*(1-y(3)/(K*(1-0.15*exp(-(t-time_perturbation)^2/10)))); ...
                          alpha*(y(1)-y(2)); ...
                          alpha*(y(2)-y(3))];
 
-    [t,y] = ode45(@(t,y) sk(t,y,K,alpha,r),[0 tmax],ci,opts); %control de paso
+    [t,y] = ode45(@(t,y) sk(t,y,K,alpha,r),[0 tmax],ci,opts);
   
     y0 = interp1(t,y(:,1),t0);
     y1 = interp1(t,y(:,2),t0);
@@ -1006,7 +856,6 @@ for ind=1:sizecomm
         
     times=ones(1,length(y0));
 
-    %calculo fases: 
     y0norm=y0-mean(y0);    
     phaseexp(ind,:)=angle(hilbert(y0norm));
   
@@ -1020,13 +869,9 @@ line(time_perturbation*[1 1],ylim,'linestyle','--','color',[.5 .5 .5])
 box on
 
 paramorden=sqrt((sum(sin(phaseexp)).^2+sum(cos(phaseexp)).^2))/sizecomm;
-mean(paramorden)
-
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Panel g
-%los datos de un phase resetting
 set(gcf,'currentaxes',handles(7))
-% subplot(3,1,3)
 
 load clusters_trend
 load('stat_true','S')
@@ -1046,8 +891,7 @@ mean_par=zeros(1,length(ind_sinc));
 max_phase=zeros(1,length(ind_sinc));
 
 
-%grafico una comuidad
-comunidad=103; %28;
+comunidad=103; 
 indcomunidad=comunidad;
 
 index=find(T==megustan(comunidad));
@@ -1061,7 +905,6 @@ angmax=ang(indmaxpico);
 yearmax=indmaxpico+desde-1;
 
 palabras={F_TIMELINE(index).word};
-%guardo data de comunidades y sincro
 Ncom(indcomunidad)=length(index);
 max_par(indcomunidad)=max(ParOrden);
 mean_par(indcomunidad)=mean(ParOrden);
@@ -1071,24 +914,20 @@ max_phase(indcomunidad)=angmax;
 desde=40;
 hasta=290;
 
-%oscilaciones
 hh=line(F_TIMELINE(1).years([desde hasta]),[0 0],'color','k','linewidth',1);
 nomuestraenlegend(hh);
 for i=1:Nwords
     plot(F_TIMELINE(1).years(desde:hasta),ZZ(:,i)/max(abs(ZZ(:,i)))); hold on;
-%    plot(F_TIMELINE(1).years(desde:hasta),ZZ(:,i)); hold on;
 end
 ylim([-1.1 1.1])
 set(gca,'Yticklabel',[])
 xlim([1800 1950])
 line(F_TIMELINE(1).years([ yearmax yearmax]),ylim,'linestyle','--','color',[.5 .5 .5])
 ylabel('Experimental')
-%xlabel('Year')
 set(handles(7),'color',[.9 .9 .9])
 
 
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% para las letritas creo un nuevo eje vacio, transparente
+% letters
 AxesH = axes('Parent', gcf, ...
   'Units', 'normalized', ...
   'Position', [0, 0, 1, 1], ...
@@ -1104,5 +943,4 @@ for indp=1:7
     text(posx,posy,letras(indp),'fontsize',20)
 end
     
-% print_pdf('fig4_all',gcf)
     
