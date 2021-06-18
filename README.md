@@ -6,6 +6,6 @@ This repository contains the data and Matlab code that was used in analyses in t
 
 ## Scripts
 
-- `figures/clusters.m`: Calculate clusters using trends and oscillations. Generates files 'clusters_trend' and 'clusters_osc' necessary for fig 2, and 'stat_true' and 'TrendPendienteFase' for figure 4
+- `figures/clusters.m`: Calculate clusters using trends and oscillations. Generates files `clusters_trend` and `clusters_osc` necessary for fig 2, and `stat_true` and `TrendPendienteFase` for figure 4
 - `figures/figures.m`: Generate all figures of the manuscript
 
