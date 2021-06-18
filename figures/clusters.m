@@ -1,10 +1,4 @@
-%% readme
-% la primer seccion genera los clusters por trends y
-% osc, necesario para fig 2. clusters_osc; clusters_trend
-
-% la segunda seccion genera analisis necesario para figura 4; stat_true;
-% TrendPendienteFase
-%% armar clusters
+%% Build clusters by oscillations and trends, mat files needed for figure 2
 clear all; 
 
 load F_TIMELINE_con_trend
@@ -21,7 +15,7 @@ DATAshort=DATA(:,desde:hasta);
 OSCshort=OSC(:,desde:hasta);
 TRENDshort=TREND(:,desde:hasta);
 
-%armar clusters osc
+%build clusters osc
 cutoff=0.5;         
 PD= pdist(OSCshort,'correlation');
 Z= linkage(PD,'average');
@@ -33,9 +27,9 @@ end
 
 megustan=find(size_com>minword);
 
-save clusters_osc T megustan desde hasta %necesario para fig3
+save clusters_osc T megustan desde hasta %needed for figure 2
 
-%armar clusters trend
+%build clusters trend
 cutoff=0.045;         
 PD= pdist(TRENDshort,'correlation');
 Z= linkage(PD,'average');
@@ -47,9 +41,12 @@ end
     
 megustan=find(size_com>minword); 
 
-save clusters_trend T megustan desde hasta %necesario para fig3
+save clusters_trend T megustan desde hasta %needed for figure 2
 
-%% analizar clusters
+fprintf('The mat files needed for Figure 2 were created\n')
+
+%% Build mat files needed for figure 4
+
 clear all; 
 
 load clusters_trend
@@ -99,7 +96,6 @@ for indc=1:length(megustan)
     S(indc).phaselock=phaselock(indc);
     S(indc).yearsincro=yearsincro(indc);    
 end
-sum(~isnan([S.phaselock]))
 
 meantrue=[S(sorted).mediaParOrden];
 meantrue=meantrue(~isnan(meantrue));
@@ -132,6 +128,8 @@ for indcomunidad=1:length(ind_sinc)
 end
 
 
-save stat_true meantrue maxtrue dimsort S %necesario para figura 4
+save stat_true meantrue maxtrue dimsort S %needed for figure 4
 
-save TrendPendienteFase phaselock pendiente %necesario para figura 4
+save TrendPendienteFase phaselock pendiente %needed for figure 4
+
+fprintf('The mat files needed for Figure 4 were created\n')

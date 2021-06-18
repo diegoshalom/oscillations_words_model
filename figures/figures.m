@@ -1,5 +1,12 @@
-%%
+%% Chech files exist
 close all
+if ~exist('clusters_trend.mat','file') || ...
+   ~exist('clusters_osc.mat','file') || ...
+   ~exist('stat_true.mat','file') || ...
+   ~exist('TrendPendienteFase.mat','file') 
+    fprintf(2,'Some needed mat files are missing. \n  Please run clusters.m first, to generate them.\n')
+    return
+end
 
 %% Figure 1
 
@@ -580,7 +587,6 @@ ylim([1.01 11.99])
 cota=2;
 indice=[Razon.corrosc]>1/cota & [Razon.corrosc]<cota & ...
        [Razon.disttotal]>1/cota & [Razon.disttotal]<cota;
-   sum(indice)
 x=rsajustes([posmaximos.SumaCODT]);
 y=tausajustes([posmaximos.SumaCODT]);
 scatter(x(indice),y(indice), 5,'o', 'MarkerFaceColor', 'r','markeredgecolor','r')
