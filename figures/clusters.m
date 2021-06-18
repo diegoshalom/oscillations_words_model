@@ -69,7 +69,6 @@ for ind=1:length(megustan)
 end
 [dimsort,sorted]=sort(dim,'descend');
 
-
 phaselock=nan(size(megustan));
 yearsincro=nan(1,length(megustan));
 

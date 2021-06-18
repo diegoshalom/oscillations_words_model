@@ -22,10 +22,9 @@ handles(2)=axes('position',[bordeizq             bordeinf ancho1 alto]);
 handles(3)=axes('position',[bordeizq+ancho1+seph bordeinf+alto+sepv ancho2 alto]);
 handles(4)=axes('position',[bordeizq+ancho1+seph bordeinf ancho2 alto]);
 
-load clusters_osc
-load('stat_true','S')
-dim=[S.comsize];
-phaselock=[S.phaselock];
+load F_TIMELINE_con_trend
+desde=50;
+hasta=300;
 
 gpalabras={ 'time' 'year' 'war'}; 
 
@@ -173,7 +172,7 @@ elegidastrend = [116 113];
 
 elegidasosc = [66 54];
 
-% %%%%%%%%%%% FIGURA 3B. SIMILARIDAD SEMANTICA
+% %%%%%%%%%%% FIGURA 2B. SIMILARIDAD SEMANTICA
 load DataTrendSSA
 
 set(gcf,'currentaxes',handles(2))
@@ -248,7 +247,7 @@ yticks(10:30:250)
 yticks([1 2 5 10 20 50 100 200 500 1000])
 ylim([5 250])
 
-% %%%%%%%%%%%%%%%%%%%% FIGURA 3 clusters trend
+% %%%%%%%%%%%%%%%%%%%% FIGURA 2 clusters trend
 load clusters_trend
 load('stat_true','S')
 load F_TIMELINE_con_trend
@@ -351,7 +350,7 @@ for indcomunidad=1:length(elegidas)
     xlim([1750 1999])    
 end
 
-% %%%%%%%%%%%%%%%%%%%%%%%% FIGURA 3 CLUSTERS OSC
+% %%%%%%%%%%%%%%%%%%%%%%%% FIGURA 2 CLUSTERS OSC
 load clusters_osc
 load('stat_true','S')
 load F_TIMELINE_con_trend
@@ -497,7 +496,7 @@ handles(3)=axes('position',[bordeizq+ancho1+seph1 bordeinf ancho2 alto2]);
 handles(4)=axes('position',[bordeizq+ancho1+seph1+ancho2+seph2 bordeinf ancho3 alto1]);
 
 
-% %%%%%%%%%%%% FIGURA 2 pendientes
+% %%%%%%%%%%%% FIGURA 3 pendientes
 load Datos_Fig2_Pendientes
 
 set(gcf,'currentaxes',handles(4))
@@ -522,8 +521,11 @@ line(xlim,10.^polyval(pexp,log10(xlim)),'Color','k')
 xlabel('Mean trend')
 ylabel('Mean oscillation amplitude')
 
-% %%%%%%%%%%%%%%%%% FIGURA 2 graficar los ajustes
+% %%%%%%%%%%%%%%%%% FIGURA 3 graficar los ajustes
 load AjustesIndividuales
+load F_TIMELINE_con_trend
+F_TIMELINE(1610)=[]; %elimino la palabra porque el integrador no converge
+
 DATA=reshape([F_TIMELINE.smoothed],309,length(F_TIMELINE))';
 TREND=reshape([F_TIMELINE.trend],309,length(F_TIMELINE))';
 OSC=DATA-TREND;
@@ -536,7 +538,7 @@ set(gcf,'currentaxes',handles(2))
 ind=pal1;
 plot(indicesusar+1700,DATA(ind,indicesusar),'k')
 hold on
-plot(indicesusar+1700,F_TIMELINE(ind).soluciones.SumaCODT,'r')
+plot(indicesusar+1700,soluciones(ind).SumaCODT,'r')
 ylabel('Relative Frequency')
 text(1870,7e-5,F_TIMELINE(ind).word)
 set(gca,'xticklabel',[])
@@ -546,7 +548,7 @@ set(gcf,'currentaxes',handles(3))
 ind=pal2;
 plot(indicesusar+1700,DATA(ind,indicesusar),'k')
 hold on
-plot(indicesusar+1700,F_TIMELINE(ind).soluciones.SumaCODT,'r')
+plot(indicesusar+1700,soluciones(ind).SumaCODT,'r')
 ylabel('Relative Frequency')
 xlabel('Years')
 text(1870,2.7e-4,F_TIMELINE(ind).word)
@@ -556,7 +558,7 @@ h=legend({'Experimental','Model'},'Position',[0.6 0.2 0.01 0.02]);
 h.EdgeColor='none';
 set(h,'color','none')
 
-% %%%%%%%%%%%%%%%%%%%%% FIGURA 2 curvas de nivel
+% %%%%%%%%%%%%%%%%%%%%% FIGURA 3 curvas de nivel
 load datos_para_fig2
 rrange=[min(rs(:)) max(rs(:))];
 taurange=[min(2./alphas(:)),max(2./alphas(:))];
@@ -571,13 +573,11 @@ ylabel('\tau (years)')
 xlabel('r (years^{-1})')
 xx=.1:.01:2;
 plot(xx,4./xx,'k','linewidth',4)
-plot(xx,2*8./(27*xx),'k','linewidth',4)
+plot(xx,8./(27*xx),'k','linewidth',4)
 xlim([.2 1.01])
 ylim([1.01 11.99])
 
 cota=2;
-posmaximos=[F_TIMELINE.posmaximos];
-Razon=[F_TIMELINE.Razon];
 indice=[Razon.corrosc]>1/cota & [Razon.corrosc]<cota & ...
        [Razon.disttotal]>1/cota & [Razon.disttotal]<cota;
    sum(indice)
@@ -603,7 +603,7 @@ set(gca,'xcolor','none','ycolor','none','color','none')
 set(h, 'AlphaData', I.alpha);
 
 %REALES
-axes('position',[.04 .05 .09 .19]);
+axes('position',[.005 .01 .09 .19]);
 I=importdata([imagedir 'Imagen2.png']);
 h=image(I.cdata);
 set(gca,'xcolor','none','ycolor','none','color','none')
