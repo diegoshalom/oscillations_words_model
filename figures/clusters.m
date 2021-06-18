@@ -1,10 +1,15 @@
+%% readme
+% la primer seccion genera los clusters por trends y
+% osc, necesario para fig 2. clusters_osc; clusters_trend
+
+% la segunda seccion genera analisis necesario para figura 4; stat_true;
+% TrendPendienteFase
 %% armar clusters
 clear all; 
 
 load F_TIMELINE_con_trend
 
 minword=7;
-maxword=3400;
 desde=40;
 hasta=290; 
 
@@ -25,10 +30,10 @@ T=cluster(Z,'Cutoff',cutoff,'Criterion','distance');
 for ind=1:max(T)
     size_com(ind)=length(find(T==ind));
 end
-    
-megustan=find(size_com>minword & size_com<maxword); 
 
-save clusters_osc T megustan F_TIMELINE desde hasta
+megustan=find(size_com>minword);
+
+save clusters_osc T megustan desde hasta %necesario para fig3
 
 %armar clusters trend
 cutoff=0.045;         
@@ -40,21 +45,21 @@ for ind=1:max(T)
     size_com(ind)=length(find(T==ind));
 end
     
-megustan=find(size_com>minword & size_com<maxword); 
+megustan=find(size_com>minword); 
 
-save clusters_trend T megustan F_TIMELINE desde hasta
+save clusters_trend T megustan desde hasta %necesario para fig3
 
 %% analizar clusters
 clear all; 
 
 load clusters_trend
-% load clusters_osc
+load F_TIMELINE_con_trend
 
-maxrhos= 0.6; 
-meanrho= 0.4 ;
+maxrho= 0.6; 
+meanrho= 0.4;
 
-DATA=reshape([F_TIMELINE.smoothed],309,length(F_TIMELINE))';
-TREND=reshape([F_TIMELINE.trend],309,length(F_TIMELINE))';
+DATA=reshape([F_TIMELINE.smoothed],length(F_TIMELINE(1).years),length(F_TIMELINE))';
+TREND=reshape([F_TIMELINE.trend],length(F_TIMELINE(1).years),length(F_TIMELINE))';
 OSC=DATA-TREND;
 
 dim=zeros(1,length(megustan));
@@ -66,8 +71,7 @@ end
 
 
 phaselock=nan(size(megustan));
-meantrue=mediaParOrden(sorted);
-maxtrue=maxParOrden(sorted);
+yearsincro=nan(1,length(megustan));
 
 S=struct([]);
 for indc=1:length(megustan)
@@ -98,9 +102,12 @@ for indc=1:length(megustan)
 end
 sum(~isnan([S.phaselock]))
 
-ind_sinc=find(~isnan(yearsincro));
-year_sinc=yearsincro(ind_sinc)+1750;
+meantrue=[S(sorted).mediaParOrden];
+meantrue=meantrue(~isnan(meantrue));
+maxtrue=[S(sorted).maxParOrden];
+maxtrue=maxtrue(~isnan(maxtrue));
 
+ind_sinc=find(~isnan([S.yearsincro]));
 
 pendiente=[];
 
@@ -126,6 +133,6 @@ for indcomunidad=1:length(ind_sinc)
 end
 
 
-save stat_true meantrue maxtrue dimsort S;  
+save stat_true meantrue maxtrue dimsort S %necesario para figura 4
 
-save('TrendPendienteFase','phaselock','pendiente')
+save TrendPendienteFase phaselock pendiente %necesario para figura 4
